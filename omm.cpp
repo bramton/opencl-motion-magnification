@@ -146,17 +146,7 @@ int main(int argc, char** argv) {
     }
 
     cv::VideoWriter vidout;
-    if (outfile->count) {
-        vidout.open(outfile->filename[0],
-            cv::VideoWriter::fourcc('X', '2', '6', '4'),
-            fs->ival[0],
-            cv::Size(cap.get(cv::CAP_PROP_FRAME_WIDTH), cap.get(cv::CAP_PROP_FRAME_HEIGHT)));
 
-        if (!vidout.isOpened()) {
-            cout << "Failed opening output video" << endl;
-            exit(1);
-        }
-    }
     if (!novis->count) {
         cv::namedWindow("w", 1);
     }
@@ -209,6 +199,20 @@ int main(int argc, char** argv) {
                 riesz_prev[i] = new cv::UMat(size, CV_32FC2);
                 *riesz_prev[i] = 0.0f;
             }
+
+            if (outfile->count) {
+                vidout.open(outfile->filename[0],
+                    cv::VideoWriter::fourcc('X', '2', '6', '4'),
+                    fs->ival[0],
+                    (pyramid[0]).size(),
+                    false);
+
+                if (!vidout.isOpened()) {
+                    cout << "Failed opening output video" << endl;
+                    exit(1);
+                }
+            }
+
             first_run = false;
         }
         
@@ -268,7 +272,9 @@ int main(int argc, char** argv) {
         }
 
         if (outfile->count) {
-            vidout.write(pyramid[0]);
+            cv::Mat grey;
+            pyramid[0].convertTo(grey, CV_8UC1, 255.0);
+            vidout.write(grey);
         }
 
         // Pointer swappi'n party, yeah !
