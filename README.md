@@ -7,7 +7,7 @@ This code provides an OpenCL accelerated phase-based motion magnification implem
 
 # Tips & tricks
 * Use uncompressed video if available
-* Increase sigma for larger videos
+* Increase sigma for larger resolution videos
 
 # Limitations/improvements
 * Only single octave pyramid supported, that is area between adjacent levels of the pyramid decrease by a factor four
